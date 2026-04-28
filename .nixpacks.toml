@@ -1,0 +1,16 @@
+
+[phases.setup]
+nixPkgs = ["php82", "php82Extensions.pdo_mysql", "composer"]
+
+[phases.install]
+cmds = ["composer install --no-dev --optimize-autoloader"]
+
+[phases.build]
+cmds = ["cp .env.example .env", "php artisan key:generate"]
+
+[phases.start]
+start = "[ -e /app/storage ] && chmod -R 777 /app/storage; php-fpm -y /assets/php-fpm.conf & nginx -c /nginx.conf"
+
+[deploy]
+healthcheckPath = "/up"
+watchPatterns = ["src/**"]
