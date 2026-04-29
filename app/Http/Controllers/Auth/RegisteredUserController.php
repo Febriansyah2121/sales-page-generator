@@ -46,6 +46,7 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return redirect(RouteServiceProvider::HOME);
+        // Redirect ke halaman verifikasi WhatsApp
+        return redirect()->route('whatsapp.verify');
     }
 }

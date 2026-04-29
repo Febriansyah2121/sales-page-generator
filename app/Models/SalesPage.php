@@ -19,6 +19,10 @@ class SalesPage extends Model
         'generated_content'
     ];
 
+    protected $casts = [
+        'generated_content' => 'array',
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);

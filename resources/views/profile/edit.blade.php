@@ -1,29 +1,82 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Profile') }}
-        </h2>
-    </x-slot>
+@extends('layouts.app')
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    @include('profile.partials.update-profile-information-form')
-                </div>
-            </div>
-
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    @include('profile.partials.update-password-form')
-                </div>
-            </div>
-
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    @include('profile.partials.delete-user-form')
-                </div>
-            </div>
-        </div>
+@section('content')
+<div class="max-w-4xl mx-auto">
+    <div class="mb-6">
+        <a href="{{ route('sales-pages.show', $page->id) }}" class="text-gray-600 hover:text-gray-800 flex items-center gap-2">
+            ← Kembali ke Sales Page
+        </a>
     </div>
-</x-app-layout>
+
+    <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-6 md:p-8">
+        <h1 class="text-xl font-bold text-gray-900 mb-2">Edit Sales Page</h1>
+        <p class="text-gray-500 text-sm mb-6">Ubah data produk atau hasil generate AI secara manual</p>
+
+        <form method="POST" action="{{ route('sales-pages.update', $page->id) }}">
+            @csrf
+            @method('PUT')
+
+            {{-- Data Produk --}}
+            <div class="border-b border-gray-200 pb-4 mb-4">
+                <h2 class="font-semibold text-gray-800 mb-3">Data Produk</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Nama Produk</label>
+                        <input type="text" name="product_name" value="{{ old('product_name', $page->product_name) }}" class="w-full border border-gray-200 rounded-lg px-3 py-2">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Target Audiens</label>
+                        <input type="text" name="target_audience" value="{{ old('target_audience', $page->target_audience) }}" class="w-full border border-gray-200 rounded-lg px-3 py-2">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Harga (Rp)</label>
+                        <input type="number" name="price" value="{{ old('price', $page->price) }}" class="w-full border border-gray-200 rounded-lg px-3 py-2">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">USP (pisahkan dengan koma)</label>
+                        <input type="text" name="usp" value="{{ old('usp', $page->usp) }}" class="w-full border border-gray-200 rounded-lg px-3 py-2">
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Deskripsi Produk</label>
+                    <textarea name="product_description" rows="3" class="w-full border border-gray-200 rounded-lg px-3 py-2">{{ old('product_description', $page->product_description) }}</textarea>
+                </div>
+            </div>
+
+            {{-- Hasil Generate AI (Manual Override) --}}
+            <div class="border-b border-gray-200 pb-4 mb-4">
+                <h2 class="font-semibold text-gray-800 mb-3">Hasil Generate AI (bisa diubah manual)</h2>
+                
+                <div class="space-y-3">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Headline</label>
+                        <input type="text" name="headline" value="{{ old('headline', $headline) }}" class="w-full border border-gray-200 rounded-lg px-3 py-2">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Subheadline</label>
+                        <input type="text" name="subheadline" value="{{ old('subheadline', $subheadline) }}" class="w-full border border-gray-200 rounded-lg px-3 py-2">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Deskripsi (untuk tampilan)</label>
+                        <textarea name="description" rows="3" class="w-full border border-gray-200 rounded-lg px-3 py-2">{{ old('description', $description) }}</textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Benefits (pisahkan dengan koma)</label>
+                        <input type="text" name="benefits" value="{{ old('benefits', $benefits) }}" class="w-full border border-gray-200 rounded-lg px-3 py-2">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Call to Action (CTA)</label>
+                        <input type="text" name="cta" value="{{ old('cta', $cta) }}" class="w-full border border-gray-200 rounded-lg px-3 py-2">
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-3">
+                <a href="{{ route('sales-pages.show', $page->id) }}" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">Batal</a>
+                <button type="submit" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">Simpan Perubahan</button>
+            </div>
+        </form>
+    </div>
+</div>
+@endsection
