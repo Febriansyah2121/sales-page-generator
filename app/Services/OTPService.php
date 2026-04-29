@@ -3,17 +3,24 @@
 namespace App\Services;
 
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class OTPService
 {
-    public function generateOTP($phone)
+    /**
+     * Generate OTP 6 digit
+     */
+    public function generateOTP(string $phone): int
     {
         $otp = rand(100000, 999999);
         Cache::put('otp_' . $phone, $otp, now()->addMinutes(10));
         return $otp;
     }
 
-    public function verifyOTP($phone, $otp)
+    /**
+     * Verifikasi OTP
+     */
+    public function verifyOTP(string $phone, string $otp): bool
     {
         $cachedOtp = Cache::get('otp_' . $phone);
         
@@ -25,22 +32,22 @@ class OTPService
         return false;
     }
 
-    public function sendOTP($phone, $otp)
+    /**
+     * Kirim OTP via WhatsApp (Simulasi)
+     */
+    public function sendOTP(string $phone, string $otp): array
     {
-        // SIMULASI: Simpan OTP ke session/laravel log saja
-        // untuk testing, OTP akan ditampilkan di halaman web
-        
         // Simpan ke cache agar bisa diambil oleh view
         Cache::put('last_otp_' . $phone, $otp, now()->addMinutes(10));
         
-        // Log ke file (opsional)
-        \Log::info("OTP untuk {$phone}: {$otp}");
+        // Log ke file (untuk debugging)
+        Log::info("OTP untuk {$phone}: {$otp}");
         
         // Return sukses simulasi
         return [
             'status' => true,
             'simulation' => true,
-            'otp' => $otp, // Hanya untuk testing, di production hapus ini
+            'otp' => $otp,
             'message' => "Kode OTP: {$otp} (Simulasi - ganti dengan WhatsApp nanti)"
         ];
     }

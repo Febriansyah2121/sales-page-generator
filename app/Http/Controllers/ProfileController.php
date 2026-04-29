@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class ProfileController extends Controller
 {
@@ -15,17 +16,22 @@ class ProfileController extends Controller
     public function update(Request $request)
     {
         $user = Auth::user();
-        $user->update($request->validate([
+        
+        $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
-        ]));
-        return redirect()->route('profile.edit')->with('status', 'Profile updated!');
+        ]);
+        
+        $user->update($request->only('name', 'email'));
+        
+        return redirect()->route('profile.edit')->with('success', 'Profile updated!');
     }
 
     public function destroy(Request $request)
     {
         Auth::logout();
         $request->user()->delete();
+        
         return redirect('/');
     }
 }
